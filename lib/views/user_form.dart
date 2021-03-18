@@ -1,16 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_crud/models/user.dart';
+import 'package:flutter_crud/providers/user.dart';
 import 'package:flutter_crud/validator/validator.dart';
+import 'package:provider/provider.dart';
 
-class UserForm extends StatelessWidget {
+class UserForm extends StatefulWidget {
+  @override
+  _UserFormState createState() => _UserFormState();
+}
+
+class _UserFormState extends State<UserForm> {
   final _form = GlobalKey<FormState>();
+
   final validator = Validator();
 
-  void onPressed() {
+  final Map<String, String> _formData = {};
+
+  void _loadUser(User user) {
+    if (user != null) {
+      _formData['id'] = user.id;
+      _formData['name'] = user.name;
+      _formData['email'] = user.email;
+      _formData['avatarUrl'] = user.avatarUrl;
+    }
+  }
+
+  void onPressed(context) {
     final isValid = _form.currentState.validate();
 
     if (isValid) {
       _form.currentState.save();
+
+      print(_formData['id']);
+
+      final newOrEditedUser = User(
+        id: _formData['id'],
+        name: _formData['name'],
+        email: _formData['email'],
+        avatarUrl: _formData['avatarUrl'],
+      );
+
+      if (newOrEditedUser.id != null) {
+        Provider.of<Users>(context, listen: false).put(newOrEditedUser);
+      } else {
+        Provider.of<Users>(context, listen: false).add(newOrEditedUser);
+      }
+
+      Navigator.of(context).pop();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final User user = ModalRoute.of(context).settings.arguments;
+
+    _loadUser(user);
   }
 
   @override
@@ -21,7 +66,7 @@ class UserForm extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: this.onPressed,
+            onPressed: () => onPressed(context),
           )
         ],
       ),
@@ -32,16 +77,22 @@ class UserForm extends StatelessWidget {
           child: Column(
             children: [
               TextFormField(
+                initialValue: _formData['name'],
                 validator: validator.emptyString(),
                 decoration: InputDecoration(labelText: 'Nome'),
+                onSaved: (value) => _formData['name'] = value,
               ),
               TextFormField(
+                initialValue: _formData['email'],
                 validator: validator.email(),
                 decoration: InputDecoration(labelText: 'Email'),
+                onSaved: (value) => _formData['email'] = value,
               ),
               TextFormField(
-                validator: validator.email(),
+                initialValue: _formData['avatarUrl'],
+                validator: validator.emptyString(),
                 decoration: InputDecoration(labelText: 'Avatar'),
+                onSaved: (value) => _formData['avatarUrl'] = value,
               ),
             ],
           ),

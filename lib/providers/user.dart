@@ -28,32 +28,35 @@ class Users with ChangeNotifier {
         user.id.trim().isNotEmpty &&
         _items.containsKey(user.id)) {
       _items.update(
-          user.id,
-          (_) => User(
-                name: user.name,
-                email: user.email,
-                avatarUrl: user.avatarUrl,
-              ));
+        user.id,
+        (_) => User(
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatarUrl: user.avatarUrl,
+        ),
+      );
     }
 
     notifyListeners();
   }
 
   void add(User user) {
-    if (user == null || user.id != null) {
+    if (user == null) {
       return;
     }
 
     final id = Random().nextDouble().toString();
 
     _items.putIfAbsent(
-        id,
-        () => User(
-              id: id,
-              name: user.name,
-              email: user.email,
-              avatarUrl: user.avatarUrl,
-            ));
+      id,
+      () => User(
+        id: id,
+        name: user.name,
+        email: user.email,
+        avatarUrl: user.avatarUrl,
+      ),
+    );
 
     notifyListeners();
   }

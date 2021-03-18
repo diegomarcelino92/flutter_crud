@@ -38,7 +38,29 @@ class UserTail extends StatelessWidget {
                 icon: Icon(Icons.delete),
                 color: Colors.red,
                 onPressed: () {
-                  users.remove(user);
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text('Excluir usuário?'),
+                      content:
+                          Text('Tem certeza que deseja excluir ${user.name}'),
+                      actions: [
+                        TextButton(
+                          child: Text('Sim'),
+                          onPressed: () {
+                            users.remove(user);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('Não'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
+                  );
                 }),
           ],
         ),
