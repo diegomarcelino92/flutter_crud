@@ -1,6 +1,6 @@
 # Projeto simples CRUD com Flutter
 
-A new Flutter project.
+Iniciado com CLI do Flutter, projeto pré configurado.
 
 ## Getting Started
 
