@@ -1,4 +1,4 @@
-# flutter_crud
+# Projeto simples CRUD com Flutter
 
 A new Flutter project.
 
